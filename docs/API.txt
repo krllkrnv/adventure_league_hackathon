@@ -1,0 +1,285 @@
+1. POST http://localhost:8080/auth/v1/login  - Авторизация пользователя
+Body
+     {
+    "email": "johndoe@example.com",
+    "password": "password1"
+     }
+Возвращает 
+    {
+    "userId": "0",   
+    "firstname": "John",
+    "lastname": "Doe",
+    "patronymic": "Smith",
+    "email": "johndoe@example.com",
+    "phoneNumber": "1234567890",
+    "telegram": "@johndoe",
+    "userRole": "ROLE_ADMIN",
+    "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiaWF0IjoxNjk3NTc0NDI2LCJleHAiOjE2OTc2NjA4MjZ9.3N5oNkULzNESDgOJ0KpGpGVG9qAqJODwrdIzbDdrQ0A",
+    "refresh_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiaWF0IjoxNjk3NTc0NDI2LCJleHAiOjE2OTgxNzkyMjZ9.SRc1wm2tLhWO2prtv0Yyf5nRBZwlT37-CPU96_VmY-Y"
+}
+Status code 200/Ok - успешно, token авторизации в теле ответа
+Status code 401/   - ошибка запроса
+Возвращает:
+{
+    "message": "Неправильный логин или пароль."
+}
+Status code 500/   - ошибка сервера
+
+2. GET http://localhost:8080/auth/v1/getAllCourses  - Запрос общего описания всех курсов
+Body
+    {
+        "userId": "0"
+    }
+Возвращает 
+    courses: [
+        {
+            "courseId": "0",
+            "courseName": "Экономика",
+            "courseStatus": "false", - записан/не записан данный пользователь на этот курс
+            "description": "Цель онлайн-курса, созданного специалистами ВШЭ, одного из ведущих экономических вузов 
+                            России — познакомить слушателя с ключевыми экономическим понятиями, заинтересовать   предметом и, 
+                            возможно, стимулировать к дальнейшему его изучению. Курс может быть успешно пройден без 
+                            каких-либо начальных экономических знаний, хотя будут полезны математические знания 
+                            уровня 10–11 классов средней школы."
+        }
+    ]
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+3. GET http://localhost:8080/auth/v1/getCourse  - Запрос общего описания конкретного курса
+Body
+    {
+        "userId": "0",
+        "courseId": "0"
+    }
+Возвращает 
+    {
+        "courseId": "0",
+        "courseName": "Экономика",
+        "courseStatus": "false", - записан/не записан данный пользователь на этот курс
+        "description": "Цель онлайн-курса, созданного специалистами ВШЭ, одного из ведущих экономических вузов 
+                        России — познакомить слушателя с ключевыми экономическим понятиями, заинтересовать предметом и, 
+                        возможно, стимулировать к дальнейшему его изучению. Курс может быть успешно пройден без 
+                        каких-либо начальных экономических знаний, хотя будут полезны математические знания 
+                        уровня 10–11 классов средней школы."
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+4. POST http://localhost:8080/auth/v1/signInCourse  - Запись студента на курс
+Body
+    {
+        "userId": "0",
+        "courseId": "0",
+        "nameBoss": "Иван Иванов",
+        "nameDepartment": "Отдел кадров",
+        "position": "Менеджер",
+        "workExperience": "10",
+        "achievements": "Крутой челикс, много, что умею",
+        "motivationLetter": "А тут я расписываю, как сильно хочу учиться"
+    }
+Возвращает 
+    {
+        "userId": "0",
+        "courseId": "0",
+        "courseStatus": "true", - челикс записан на курс
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+5. GET http://localhost:8080/timetable  - Получить расписание группы
+Body
+    {
+        "groupId": "0"
+    }
+Возвращает 
+    {
+        timetable: [
+            "day": "Понедельник",
+            "lessons": [
+                {
+                    "nameCourse": "Экономика",
+                    "timestamp": "9.50",
+                    "typeLesson": "Лекция",
+                    "teacher": "Бабенков Олег Михайлович"
+                }
+            ]
+        ]
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+6. GET http://localhost:8080/myCourse  - Получить данные о курсе, который проходит студент
+Body
+    {
+        "userId": "0",
+        "courseId": "0"
+    }
+Возвращает 
+    {
+        "courseId": "0",
+		"courseName": "Экономика",
+        lessons: [
+            {
+                "id"": "0",
+                "lessonName": "Введение",
+                "video": "тут будет видео",
+                "task": "Написать сочинение на тему 'Как я провел лето'",
+                "taskStatus": "false"
+            }
+        ]
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+7. GET http://localhost:8080/myAllCourse  - Получить данные о всех курсах, которые проходит студент
+Body
+    {
+        "userId": "0"
+    }
+Возвращает 
+    {
+        courses: [
+			{
+                "id": "0",
+                "name": "Экономика",
+                "body": {
+                    "duration": "14",
+                    "passingPercent": "18"
+                }
+            }
+        ]
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+8. POST http://localhost:8080/requestForAdmissionCommittee  - Одобрить заявку студента на обучение
+Body
+    {
+        "studentId": "0"
+    }
+Возвращает 
+    {
+        "studentId": "0",
+
+        "groupId": "0"
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+8. POST http://localhost:8080/requestForAdmissionCommittee  - Одобрить заявку студента на обучение
+Body
+    {
+        "studentId": "0"
+    }
+Возвращает 
+    {
+        "studentId": "0",
+        "userRole": "ROLE_STUDENT",
+        "groupId": "0"
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+9. GET http://localhost:8080/allGroupsForTutor  - Получить все группы, где юзер - куратор
+Body
+    {
+        "userId": "0"
+    }
+Возвращает 
+    {
+        groups: [
+            {
+                "id": "0",
+                "number": "0375",
+                "countOfStudent": "4"
+            }
+        ]
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+10. GET http://localhost:8080/groupForUser  - Получить информацию о курируемой группе
+Body
+    {
+        "groupId": "0"
+    }
+Возвращает 
+    {
+        group: {
+            "id": 0,
+            "number": "0375",
+            students: [
+                {
+                    "studentId": "0",
+                    "studentName": "Федотов Максим"
+                }
+            ]
+        }
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+11. GET http://localhost:8080/allRequests  - Получить все активные заявки на обучение
+Body
+    {
+
+    }
+Возвращает 
+    {
+        requests: [
+            {
+                "userId": "0",
+                "userFirstname": "John",
+                "userLastname": "Doe",
+                "userPatronymic": "Smith",
+                "courseId": "0",
+                "nameBoss": "Иван Иванов",
+                "nameDepartme": "Отдел кадров",
+                "position": "Менеджер",
+                "workExperience": "10",
+                "achievements": "Крутой челикс, много, что умею",
+                "motivationLetter": "А тут я расписываю, как сильно хочу учиться"
+            }
+        ]
+    }
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+12. GET http://localhost:8080/news - Получить все новости
+Body{
+
+}
+Возвращает
+{
+    news: [
+        {
+          id: 0,
+          title: 'Новость 1',
+          date: '01.01.2001',
+          body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in blandit ante. Vestibulum dolor nisi, imperdiet in dictum eu, tincidunt sed purus. Sed turpis metus, dictum eget mi in, pellentesque lacinia augue. Fusce lacus ex, faucibus nec odio vel, tempor suscipit est. Aenean bibendum est ut nisl euismod, at sollicitudin nisi interdum. Nunc ac maximus arcu, at consequat odio. Cras lacinia libero sit amet blandit porttitor.'
+        }
+    ]
+}
+Status code 200/Ok - успешно
+Status code 401/   - ошибка запроса
+Status code 500/   - ошибка сервера
+
+По структуре юзеров в БД:
+Их 20, пароль: password{id}
+1 - Админ
+2-3 - Преподы
+4-6 - Кураторы
+7-8 - Приёмка
+9-16 - Студенты
+17-20 - Абитуры
